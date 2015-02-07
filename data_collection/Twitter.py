@@ -20,11 +20,22 @@ class TheTwitter(object):
                 #print '|'+token+'|'
                 #print '|'+token_key+'|'
         print 'making the twitter_object'
-        self.twitter_object = Twitter(auth=OAuth(token, token_key,
+        self.twitter_search = Twitter(auth=OAuth(token, token_key,
                                             self.consumer_key, self.consumer_secret))
+        self.twitter_stream = TwitterStream(auth=OAuth(token, token_key, self.consumer_key, self.consumer_secret))
+        search_result = self.twitter_search.search.tweets(q='test')
+        print 'twitter search test'
+        print search_result['statuses'][0]['text']
+        stream_result = self.twitter_stream.statuses.sample(language='en',locations=[-180,-90,180,90])
+        print 'twitter stream test'
+        for tweet in stream_result:
+            print tweet
+            break
 
-        self.twitter_object.search.tweets(q='test')
         print 'successful test'
+
+    def live(self):
+        pass
 
 def test():
     t = TheTwitter(open('simile.smile','r'))
