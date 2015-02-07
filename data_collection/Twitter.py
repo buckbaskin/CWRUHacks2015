@@ -26,7 +26,7 @@ class TheTwitter(object):
         search_result = self.twitter_search.search.tweets(q='test')
         print 'twitter search test'
         print search_result['statuses'][0]['text']
-        stream_result = self.twitter_stream.statuses.sample(language='en',locations=[-180,-90,180,90])
+        stream_result = self.twitter_stream.statuses.sample(language='en')
         print 'twitter stream test'
         for tweet in stream_result:
             print tweet
@@ -35,7 +35,30 @@ class TheTwitter(object):
         print 'successful test'
 
     def live(self):
-        pass
+        return self.stream()
+
+    def tweet_stream(self, mode='sample', lang='en'):
+        if mode == 'firehose':
+            stream_result = self.twitter_stream.statuses.firehose(lanugage=lang)
+        else:
+            stream_result = self.twitter_stream.statuses.sample(language=lang)
+
+        return stream_result
+
+    def tweet_search(self, query = 'test', lang= 'en'):
+        return self.twitter_search.search.tweets(q=query,language=lang)
+
+    def user_search(self, query):
+        return self.twitter_search.search.tweets(q=query)
+
+    def friend_lookup(self, user_id):
+        return self.twitter_search.friends.ids(user_id=user_id)
+
+    def user_lookup_id(self, user_id):
+        return self.twitter_search.users.show(user_id=user_id)
+
+    def user_lookup_name(self, user_name):
+        return self.twitter_search.users.show(screen_name=user_name)
 
 def test():
     t = TheTwitter(open('simile.smile','r'))
