@@ -11,7 +11,12 @@ class TheTwitter(object):
 
         if (os.path.isfile('simile2.smile'))==False:
             print('oauth_dance')
-            token,token_key = oauth_dance('The Insight Project',self.consumer_key,self.consumer_secret,token_filename='simile2.smile')
+            token,token_key = oauth_dance('The Insight Project',self.consumer_key,self.consumer_secret,token_filename='..\\simile2.smile')
+        elif (os.path.isfile('..\\simile2.smile')):
+            print 'use shifted file'
+            with open('..\\simile2.smile') as f:
+                token = f.readline()[:-1]
+                token_key = f.readline()[:-1]
         else:
             print 'use existing file'
             with open('simile2.smile','r') as f:
@@ -19,23 +24,20 @@ class TheTwitter(object):
                 token_key = f.readline()[:-1]
                 #print '|'+token+'|'
                 #print '|'+token_key+'|'
-        print 'making the twitter_object'
+        #print 'making the twitter_object'
         self.twitter_search = Twitter(auth=OAuth(token, token_key,
                                             self.consumer_key, self.consumer_secret))
         self.twitter_stream = TwitterStream(auth=OAuth(token, token_key, self.consumer_key, self.consumer_secret))
         search_result = self.twitter_search.search.tweets(q='test')
-        print 'twitter search test'
-        print search_result['statuses'][0]['text']
+        #print 'twitter search test'
+        #print search_result['statuses'][0]['text']
         stream_result = self.twitter_stream.statuses.sample(language='en')
-        print 'twitter stream test'
+        #print 'twitter stream test'
         for tweet in stream_result:
-            print tweet
+            #print tweet
             break
 
-        print 'successful test'
-
-    def live(self):
-        return self.stream()
+        print 'successful twitter creation test'
 
     def tweet_stream(self, mode='sample', lang='en'):
         if mode == 'firehose':
@@ -55,13 +57,44 @@ class TheTwitter(object):
         return self.twitter_search.friends.ids(user_id=user_id)
 
     def user_lookup_id(self, user_id):
+        '''returns a twitter user object, lookup 1 by id'''
         return self.twitter_search.users.show(user_id=user_id)
 
     def user_lookup_name(self, user_name):
+        '''returns a twitter user object, lookup 1 by screen_name'''
         return self.twitter_search.users.show(screen_name=user_name)
 
+    def bfs(self, root_id):
+        b = BreadthFirst(root_id)
+        return b
+
+    ### API ###
+    def live(self):
+        '''Use this for streaming live generic data'''
+        return self.twitter_stream.statuses.sample(language='en')
+    def fill(self, user_id):
+        '''Use this for filling out a network around a user'''
+        return self.bfs(user_id)
+    def user(self, user_id):
+        '''Equivalent to fill. Complete a network around a user'''
+        return self.fill(user_id)
+
+class BreadthFirst(object):
+
+    def __init__(self, node_id):
+        self.queue = [node_id]
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        if not self.queue: raise StopIteration
+        node = self.queue.pop(0) #node id
+        self.queue += node.children
+        return node
+
 def test():
-    t = TheTwitter(open('simile.smile','r'))
+    t = TheTwitter(open('..\\simile.smile','r'))
 
 if __name__ == '__main__':
     test()
