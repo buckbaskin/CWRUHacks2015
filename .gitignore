@@ -16,6 +16,7 @@ $RECYCLE.BIN/
 
 *.mp3
 *.jpg
+*.smile
 
 .idea/
 Library/metadata/
