@@ -8,14 +8,14 @@ import threading
 class Network(object):
     def __init__(self, twitter):
         self.nodes = dict()# list of nodes (id , Node object)
-        self.connections = dict() # list of connections (id , dict of connections)
+        self.connections = dict() # list of connections (id , connection weight))
         self.twitter = twitter
 
     def add_node(self, node, connections_list):
         self.nodes[node.id] = node
         self.connections[node.id] = dict()
         for connection in connections_list: #connection is a node_id
-            self.connections[node.id][connection.id] = [connection]
+            self.connections[node.id][connection.id] = 1.0
         return True
 
     def add_nodes(self, node_list):
@@ -55,7 +55,7 @@ class Network(object):
         data = self.twitter.friend_lookup(user_id)
         connect = dict()
         for friend in data:
-            connect[user_id] = friend['id']
+            connect[friend['id']] = 1.0
 
 
 
