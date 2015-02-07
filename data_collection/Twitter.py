@@ -3,7 +3,7 @@ __author__ = 'buckbaskin'
 from twitter import *
 import os
 
-class Twitter(object):
+class TheTwitter(object):
 
     def __init__(self,smile_file):
         self.consumer_key = smile_file.readline()[:-1]
@@ -13,18 +13,21 @@ class Twitter(object):
             print('oauth_dance')
             token,token_key = oauth_dance('The Insight Project',self.consumer_key,self.consumer_secret,token_filename='simile2.smile')
         else:
+            print 'use existing file'
             with open('simile2.smile','r') as f:
                 token = f.readline()[:-1]
-                token_key = f.readline()
-        global twitter_object
-        twitter_object = Twitter(auth=OAuth(token, token_key,
+                token_key = f.readline()[:-1]
+                #print '|'+token+'|'
+                #print '|'+token_key+'|'
+        print 'making the twitter_object'
+        self.twitter_object = Twitter(auth=OAuth(token, token_key,
                                             self.consumer_key, self.consumer_secret))
 
-        twitter_object.search.tweets(q='test')
+        self.twitter_object.search.tweets(q='test')
         print 'successful test'
 
 def test():
-    t = Twitter(open('simile.smile','r'))
+    t = TheTwitter(open('simile.smile','r'))
 
 if __name__ == '__main__':
     test()
