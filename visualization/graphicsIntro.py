@@ -1,3 +1,4 @@
+__author__ = 'buckbaskin'
 from graphics import *
 
 def main():

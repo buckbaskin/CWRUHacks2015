@@ -69,14 +69,15 @@ def locate(p,r,theta,pitch, screen_distance):
     w = tuple( [ p[0] - r[0] , p[1] - r[1] , p[2] - r[2] ] )
     xy = (dot_mag(w[0],w[1],w[2],x_unit[0],x_unit[1],x_unit[2]), dot_mag(w[0],w[1],w[2],y_unit[0],y_unit[1],y_unit[2]))
     # return (x,y)
-    xy = (xy[0]*screen_distance/dist_on_line(p,r,(r[0]+z_unit[0],r[1]+z_unit[1],r[2]+z_unit[2])), xy[1]*screen_distance/dist_on_line(p,r,(r[0]+z_unit[0],r[1]+z_unit[1],r[2]+z_unit[2])))
+    xy = (xy[0]*screen_distance/max(1,dist_on_line(p,r,(r[0]+z_unit[0],r[1]+z_unit[1],r[2]+z_unit[2]))),
+          xy[1]*screen_distance/max(1,dist_on_line(p,r,(r[0]+z_unit[0],r[1]+z_unit[1],r[2]+z_unit[2]))))
 
     return xy
 
 def size(actual, p, r, theta, pitch, screen_distance):
     z_unit = cross_tup(sin(theta)*cos(pitch),cos(theta)*cos(pitch),sin(pitch),0,0,1)
-    print 'dist_on_line for size: '+str(dist_on_line(p,r,(r[0]+z_unit[0],r[1]+z_unit[1],r[2]+z_unit[2])))
-    return actual*screen_distance/dist_on_line(p,r,(r[0]+z_unit[0],r[1]+z_unit[1],r[2]+z_unit[2]))
+    #print 'dist_on_line for size: '+str(dist_on_line(p,r,(r[0]+z_unit[0],r[1]+z_unit[1],r[2]+z_unit[2])))
+    return actual*screen_distance/max(1,dist_on_line(p,r,(r[0]+z_unit[0],r[1]+z_unit[1],r[2]+z_unit[2])))
 
 
 def test_tup():
@@ -85,16 +86,20 @@ def test_tup():
     print a-b
 
 def viz_test():
-    print 'viz (0,0,0)0,0 -> (4,3,)'
-    r = (0,0,0)
-    p = (4,3,0)
-    theta = 0
-    pitch = 0
-    screen_distance = 2
-    actual_size = 1
+    print 'viz (4,4,4)-2.36,-1.58 -> (-2.5,-2.75,-2)'
+    r = (4,4,4)
+    p = (-2.5,-2.75,-2)
+    theta = -2.356
+    pitch = -0.785
+    screen_distance = 1
+    actual_size = .5
 
     y_unit = cross_tup(sin(theta)*cos(pitch),cos(theta)*cos(pitch),sin(pitch),p[0]-r[0],p[1]-r[1],r[2]-p[2])
     y_unit = (y_unit[0] / dist(y_unit[0],y_unit[1],y_unit[2]) , y_unit[1] / dist(y_unit[0],y_unit[1],y_unit[2]) , y_unit[2] / dist(y_unit[0],y_unit[1],y_unit[2]))
+    print 'sin(theta) --> ' + str(sin(theta))
+    print 'sin(pitch) --> ' + str(sin(pitch))
+    print 'cos(theta) --> ' + str(cos(theta))
+    print 'cos(pitch) --> ' + str(cos(pitch))
     z_unit = cross_tup(sin(theta)*cos(pitch),cos(theta)*cos(pitch),sin(pitch),0,0,1)
     x_unit = cross_tup(y_unit[0],y_unit[1],y_unit[2],z_unit[0],z_unit[1],z_unit[2])
     print 'xt: '+str(x_unit)
