@@ -94,6 +94,9 @@ class LeapSimulator(object):
         self.update_cmd()
         self.update_state()
 
+    def state(self):
+        return self.state
+
 class SampleListener(Leap.Listener):
 
     def on_connect(self, controller):
