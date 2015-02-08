@@ -12,47 +12,56 @@ def dist(x,y,z):
 def dot_mag(a1,a2,a3,b1,b2,b3):
     return a1*b1+a2*b2+a3*b3
 
-def dist_from_line(x0,y0,z0,x1,y1,z1,x2,y2,z2):
-    x01 = x0-x1
-    y01 = y0-y1
-    z01 = z0-z1
-    x02 = x0-x2
-    y02 = y0-y2
-    z02 = z0-z2
-    x21 = x2-x1
-    y21 = y2-y1
-    z21 = z2-z1
+def dist_from_line(p0 , p1 ,p2 ,y0,z0,y1,z1,x2,y2,z2):
+    x01 = p0[0]-p1[0]
+    y01 = p0[1]-p1[1]
+    z01 = p0[2]-p1[2]
+
+    x02 = p0[0]-p2[0]
+    y02 = p0[1]-p2[1]
+    z02 = p0[2]-p2[2]
+
+    x21 = p2[0]-p1[0]
+    y21 = p2[1]-p1[1]
+    z21 = p2[2]-p1[2]
 
     return cross_mag(x01,y01,z01,x02,y02,z02) / dist(x21,y21,z21)
 
-def dist_on_line(x0,y0,z0,x1,y1,z1,x2,y2,z2):
+def dist_on_line(p0,p1,p2, x1,y1,z1,x2,y2,z2):
+    ''' Returns the distance along the line from p1 to p2, dist to p0
+    p0-2 are tuples/triples'''
     #v
-    x21 = x2-x1
-    y21 = y2-y1
-    z21 = z2-z1
+    x21 = p2[0]-p1[0]
+    y21 = p2[1]-p1[1]
+    z21 = p2[2]-p1[2]
     #u
-    x01 = x0-x1
-    y01 = y0-y1
-    z01 = z0-z1
+    x01 = p0[0]-p1[0]
+    y01 = p0[1]-p1[1]
+    z01 = p0[2]-p1[2]
 
     return dot_mag(x01,y01,z01,x21,y21,z21) / dist(x21,y21,z21)
 
-def dist_sort(list, x1, y1, z1, x2, y2, z2):
-    return sorted(list, key=lambda v3: dist_on_line(v3[0],v3[1],v3[2],x1,y1,z1,x2,y2,z2), reverse=True )
+
+
+def dist_sort(list, p1, p2):
+    '''Uses the lambda to sort the field in terms of distance along the line to p1, reversed.
+    Render in order on the list for depth'''
+    return sorted(list, key=lambda v3: dist_on_line(v3[0],v3[1],v3[2],p1[0],p1[1],p1[2],p2[0],p2[1],p2[2]), reverse=True )
+
+def toTuple(x,y,z):
+    return (x,y,z)
 
 def test():
     pass
 
 if __name__ == '__main__':
-    x1=0
-    y1=0
-    z1=0
+    p1 = (0,0,0)
+    p2 = (1,0,0)
 
-    x2=1
-    y2=0
-    z2=0
     print 'go'
     l = [ (1,1,0) , (2,0,1) , (.5,-1,0) ]
     print str(l)
-    l = dist_sort(l,x1,y1,z1,x2,y2,z2)
+    l = dist_sort(l,p1,p2)
     print str(l)
+
+#255
